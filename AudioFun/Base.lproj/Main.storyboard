@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Spectrum View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="SpectrumViewController" customModule="AudioFun" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="cbG-ym-pmC" customClass="SpectrumView" customModule="AudioFun" customModuleProvider="target">
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gdy-V4-Eml" customClass="FrequencyAxisView" customModule="AudioFun" customModuleProvider="target">
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="iP5-Zn-Jrh" customClass="DecibelAxisView" customModule="AudioFun" customModuleProvider="target">
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minimumValue="1" maximumValue="7" translatesAutoresizingMaskIntoConstraints="NO" id="xHj-Jr-2gs">
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="stepperValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="NtI-aZ-UWZ"/>
+                                </connections>
+                            </stepper>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buffer size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oHl-ep-fUI">
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4096" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3l-WM-TQs">
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U95-6p-SjF">
+                                <color key="onTintColor" red="0.83020968264248707" green="0.12436723758374477" blue="0.0083294681120712373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="engineOnOff:" destination="BYZ-38-t0r" eventType="valueChanged" id="IM8-33-7JL"/>
+                                </connections>
+                            </switch>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="i3l-WM-TQs" firstAttribute="leading" secondItem="xHj-Jr-2gs" secondAttribute="trailing" constant="8" symbolic="YES" id="35B-uz-ceR"/>
+                            <constraint firstItem="xHj-Jr-2gs" firstAttribute="trailing" secondItem="oHl-ep-fUI" secondAttribute="centerX" constant="-4" id="4pB-fc-ex9"/>
+                            <constraint firstItem="xHj-Jr-2gs" firstAttribute="top" secondItem="oHl-ep-fUI" secondAttribute="bottom" constant="8" symbolic="YES" id="6Hx-bj-8up"/>
+                            <constraint firstItem="gdy-V4-Eml" firstAttribute="trailing" secondItem="cbG-ym-pmC" secondAttribute="trailing" id="9S9-rf-zHx"/>
+                            <constraint firstItem="U95-6p-SjF" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="CRE-Lm-5vl"/>
+                            <constraint firstItem="xHj-Jr-2gs" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="D6Z-Oi-al2"/>
+                            <constraint firstItem="iP5-Zn-Jrh" firstAttribute="top" secondItem="cbG-ym-pmC" secondAttribute="top" id="JsC-Mm-9bl"/>
+                            <constraint firstItem="U95-6p-SjF" firstAttribute="trailing" secondItem="cbG-ym-pmC" secondAttribute="trailing" id="STF-1x-UYm"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="iP5-Zn-Jrh" secondAttribute="leading" id="Wax-OC-wcv"/>
+                            <constraint firstItem="oHl-ep-fUI" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="Wgw-JD-2T1"/>
+                            <constraint firstItem="iP5-Zn-Jrh" firstAttribute="bottom" secondItem="cbG-ym-pmC" secondAttribute="bottom" id="YpD-Qp-ZSh"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="gdy-V4-Eml" secondAttribute="bottom" constant="8" symbolic="YES" id="aJh-PX-il2"/>
+                            <constraint firstItem="iP5-Zn-Jrh" firstAttribute="width" secondItem="cbG-ym-pmC" secondAttribute="width" multiplier="0.1" id="bGl-Im-YvX"/>
+                            <constraint firstItem="i3l-WM-TQs" firstAttribute="leading" secondItem="oHl-ep-fUI" secondAttribute="centerX" constant="4" id="ds6-Aa-t5t"/>
+                            <constraint firstItem="cbG-ym-pmC" firstAttribute="leading" secondItem="iP5-Zn-Jrh" secondAttribute="trailing" id="fwk-tQ-b7u"/>
+                            <constraint firstItem="cbG-ym-pmC" firstAttribute="top" secondItem="xHj-Jr-2gs" secondAttribute="bottom" constant="8" symbolic="YES" id="hYo-Xy-o5k"/>
+                            <constraint firstItem="xHj-Jr-2gs" firstAttribute="leading" secondItem="oHl-ep-fUI" secondAttribute="trailing" constant="8" symbolic="YES" id="kgI-FF-2fb"/>
+                            <constraint firstItem="gdy-V4-Eml" firstAttribute="top" secondItem="cbG-ym-pmC" secondAttribute="bottom" id="mSa-vQ-nHi"/>
+                            <constraint firstItem="i3l-WM-TQs" firstAttribute="centerY" secondItem="xHj-Jr-2gs" secondAttribute="centerY" id="pQz-iR-8Ld"/>
+                            <constraint firstItem="gdy-V4-Eml" firstAttribute="leading" secondItem="cbG-ym-pmC" secondAttribute="leading" id="s93-SH-eEU"/>
+                            <constraint firstItem="oHl-ep-fUI" firstAttribute="centerY" secondItem="xHj-Jr-2gs" secondAttribute="centerY" id="trI-65-7gS"/>
+                            <constraint firstItem="xHj-Jr-2gs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="veW-yu-jGc"/>
+                            <constraint firstItem="oHl-ep-fUI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vtw-Mk-QLM"/>
+                            <constraint firstItem="gdy-V4-Eml" firstAttribute="height" secondItem="cbG-ym-pmC" secondAttribute="height" multiplier="0.1" id="wKj-Mm-TKz"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cbG-ym-pmC" secondAttribute="trailing" id="yTg-OO-fv3"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="35B-uz-ceR"/>
+                                <exclude reference="ds6-Aa-t5t"/>
+                                <exclude reference="Wgw-JD-2T1"/>
+                                <exclude reference="trI-65-7gS"/>
+                                <exclude reference="vtw-Mk-QLM"/>
+                                <exclude reference="4pB-fc-ex9"/>
+                                <exclude reference="6Hx-bj-8up"/>
+                                <exclude reference="D6Z-Oi-al2"/>
+                                <exclude reference="kgI-FF-2fb"/>
+                                <exclude reference="veW-yu-jGc"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="35B-uz-ceR"/>
+                                <include reference="trI-65-7gS"/>
+                                <include reference="D6Z-Oi-al2"/>
+                                <include reference="kgI-FF-2fb"/>
+                                <include reference="veW-yu-jGc"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="ds6-Aa-t5t"/>
+                                <include reference="Wgw-JD-2T1"/>
+                                <include reference="vtw-Mk-QLM"/>
+                                <include reference="4pB-fc-ex9"/>
+                                <include reference="6Hx-bj-8up"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="bufferLabel" destination="i3l-WM-TQs" id="I4A-O1-LE3"/>
+                        <outlet property="bufferStepper" destination="xHj-Jr-2gs" id="PKm-b0-My3"/>
+                        <outlet property="freqAxisView" destination="gdy-V4-Eml" id="hPR-AL-ygC"/>
+                        <outlet property="powerSwitch" destination="U95-6p-SjF" id="QJ2-zd-7at"/>
+                        <outlet property="spectrumView" destination="cbG-ym-pmC" id="lmp-iQ-mtB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="22.5" y="32.74647887323944"/>
+        </scene>
+    </scenes>
+</document>
