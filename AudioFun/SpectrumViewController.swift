@@ -15,7 +15,7 @@ class SpectrumViewController: UIViewController {
     
     var timer: Timer!
     var sampleRate: Double = 44100.0
-    var bufferSize: AVAudioFrameCount = 512 {
+    var bufferSize: AVAudioFrameCount = 1024 {
         didSet {
             spectrumView?.bufferSize = Double(bufferSize)
             freqAxisView?.bufferSize = Double(bufferSize)
@@ -70,24 +70,9 @@ class SpectrumViewController: UIViewController {
         }
         
         spectrumView.fft = nil
-        switch sender.value {
-        case 1:
-            bufferSize = 64
-        case 2:
-            bufferSize = 128
-        case 3:
-            bufferSize = 256
-        case 4:
-            bufferSize = 512
-        case 5:
-            bufferSize = 1024
-        case 6:
-            bufferSize = 2048
-        case 7:
-            bufferSize = 4096
-        default:
-            break
-        }
+
+        bufferSize = AVAudioFrameCount(pow(2.0, Double(sender.value)))
+        
         if powerSwitch.isOn {
             startEngine()
         }
@@ -107,7 +92,7 @@ class SpectrumViewController: UIViewController {
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
             
-            let ioBufferDuration = Double(bufferSize) / sampleRate
+            let ioBufferDuration = 64.0 / sampleRate
             
             try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(ioBufferDuration)
         } catch {

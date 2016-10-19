@@ -1,6 +1,8 @@
 // FFT.swift
 //
-// Copyright (c) 2014–2015 Mattt Thompson (http://mattt.me)
+// Created by: Mattt Thompson (http://mattt.me)
+//
+// Modified by: Mattijah. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +27,14 @@ import Accelerate
 // MARK: Fast Fourier Transform
 
 public func fft(_ input: [Float]) -> [Float] {
-    var real = [Float](input)
+    var buffer = [Float](input)
+    var real = [Float](repeating: 0.0, count: input.count)
     var imaginary = [Float](repeating: 0.0, count: input.count)
+    
+    var hannWindow = [Float](repeating: 0.0, count: input.count)
+    vDSP_hann_window(&hannWindow, vDSP_Length(input.count), 0)
+    vDSP_vmul(&buffer, 1, hannWindow, 1, &real, 1, vDSP_Length(input.count))
+    
     var splitComplex = DSPSplitComplex(realp: &real, imagp: &imaginary)
     
     let length = vDSP_Length(floor(log2(Float(input.count))))
@@ -40,10 +48,10 @@ public func fft(_ input: [Float]) -> [Float] {
     var normalizedMagnitudes = [Float](repeating: 0.0, count: input.count)
     vDSP_vsmul(magnitudes.map({ (sample) -> Float in
         return sqrt(sample)
-    }), 1, [2.0 / Float(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
+    }), 1, [4.0 / Float(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
     
     var logNormMagnitudes = [Float](repeating: 0.0, count: input.count)
-    var mul: Float = 20.0
+    var mul: Float = 10.0
     vDSP_vsmul(normalizedMagnitudes.map({ (sample) -> Float in
         return log10(sample)
     }), 1, &mul, &logNormMagnitudes, 1, vDSP_Length(input.count))
@@ -54,8 +62,14 @@ public func fft(_ input: [Float]) -> [Float] {
 }
 
 public func fft(_ input: [Double]) -> [Double] {
-    var real = [Double](input)
+    var buffer = [Double](input)
+    var real = [Double](repeating: 0.0, count: input.count)
     var imaginary = [Double](repeating: 0.0, count: input.count)
+    
+    var hannWindow = [Double](repeating: 0.0, count: input.count)
+    vDSP_hann_windowD(&hannWindow, vDSP_Length(input.count), 0)
+    vDSP_vmulD(&buffer, 1, hannWindow, 1, &real, 1, vDSP_Length(input.count))
+    
     var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
     
     let length = vDSP_Length(floor(log2(Float(input.count))))
@@ -69,10 +83,16 @@ public func fft(_ input: [Double]) -> [Double] {
     var normalizedMagnitudes = [Double](repeating: 0.0, count: input.count)
     vDSP_vsmulD(magnitudes.map({ (sample) -> Double in
         return sqrt(sample)
-    }), 1, [2.0 / Double(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
+    }), 1, [4.0 / Double(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
+    
+    var logNormMagnitudes = [Double](repeating: 0.0, count: input.count)
+    var mul: Double = 10.0
+    vDSP_vsmulD(normalizedMagnitudes.map({ (sample) -> Double in
+        return log10(sample)
+    }), 1, &mul, &logNormMagnitudes, 1, vDSP_Length(input.count))
     
     vDSP_destroy_fftsetupD(weights)
     
-    return normalizedMagnitudes
+    return logNormMagnitudes //normalizedMagnitudes
 }
 
