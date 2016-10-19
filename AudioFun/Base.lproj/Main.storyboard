@@ -18,7 +18,7 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="cbG-ym-pmC" customClass="SpectrumView" customModule="AudioFun" customModuleProvider="target">
@@ -113,6 +113,15 @@
                                 <include reference="vtw-Mk-QLM"/>
                                 <include reference="4pB-fc-ex9"/>
                                 <include reference="6Hx-bj-8up"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <include reference="35B-uz-ceR"/>
+                                <include reference="Wgw-JD-2T1"/>
+                                <include reference="D6Z-Oi-al2"/>
+                                <include reference="kgI-FF-2fb"/>
+                                <include reference="veW-yu-jGc"/>
                             </mask>
                         </variation>
                     </view>
