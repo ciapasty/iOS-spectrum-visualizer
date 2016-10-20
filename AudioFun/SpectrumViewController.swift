@@ -9,133 +9,121 @@
 import UIKit
 import AVFoundation
 
-class SpectrumViewController: UIViewController {
+class SpectrumViewController: UIViewController, AudioEngineDelegate, dBFreqAxesScalingDelegate {
 
-    var engine = AVAudioEngine()
-    
+    var engine: AudioEngine!
     var timer: Timer!
+    var samples = [Float]()
+    
+    // Axes scaling delegate vars
     var sampleRate: Double = 44100.0
-    var bufferSize: AVAudioFrameCount = 1024 {
+    var bufferSize: Double = 1024.0 {
         didSet {
-            spectrumView?.bufferSize = Double(bufferSize)
-            freqAxisView?.bufferSize = Double(bufferSize)
+            engine?.bufferSize = AVAudioFrameCount(bufferSize)
             bufferLabel?.text = "\(bufferSize)"
         }
     }
-    var samples = [Float]()
     
-    @IBOutlet weak var spectrumView: SpectrumView!
-    @IBOutlet weak var freqAxisView: FrequencyAxisView!
+    @IBOutlet weak var spectrumView: SpectrumView! {
+        didSet {
+            spectrumView.delegate = self
+        }
+    }
+    @IBOutlet weak var freqAxisView: FrequencyAxisView! {
+        didSet {
+            freqAxisView.delegate = self
+        }
+    }
+    @IBOutlet weak var decibelAxisView: DecibelAxisView! {
+        didSet {
+            decibelAxisView.delegate = self
+        }
+    }
     @IBOutlet weak var bufferStepper: UIStepper!
     @IBOutlet weak var bufferLabel: UILabel!
     @IBOutlet weak var powerSwitch: UISwitch!
     
+    // MARK: - ViewController life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupAudioEngine()
+        engine = AudioEngine(sampleRate: sampleRate, bufferSize: AVAudioFrameCount(bufferSize))
+        engine.delegate = self
+        engine.setupAudioEngine()
         
         // Timer loop setup
         timer = Timer(timeInterval: 0.01, target: self, selector: #selector(self.timerTick), userInfo: nil, repeats: true)
         
         // SpectrumView setup
-        spectrumView.samplingRate = sampleRate
-        spectrumView.bufferSize = Double(bufferSize)
-        freqAxisView.bufferSize = Double(bufferSize)
         bufferLabel.text = "\(bufferSize)"
+        
+        RunLoop.current.add(timer, forMode: RunLoopMode.commonModes)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if powerSwitch.isOn {
-            startEngine()
+            engine.startEngine()
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        stopEngine()
+        engine.stopEngine()
     }
+    
+    // MARK: - AudioEngineDelegate
+    
+    func audioEngineReturned(_ engine: AudioEngine, samples: [Float]) {
+        self.samples = samples
+    }
+    
+    // MARK: UI Controls
     
     @IBAction func engineOnOff(_ sender: UISwitch) {
         if sender.isOn {
-            startEngine()
+            engine.startEngine()
         } else {
-            stopEngine()
+            engine.stopEngine()
         }
     }
+    
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
         if engine.isRunning {
-            stopEngine()
+            engine.stopEngine()
         }
         
         spectrumView.fft = nil
 
-        bufferSize = AVAudioFrameCount(pow(2.0, Double(sender.value)))
+        bufferSize = pow(2.0, Double(sender.value))
         
         if powerSwitch.isOn {
-            startEngine()
+            engine.startEngine()
         }
     }
+    
+    // MARK: Other methods
     
     func timerTick(sender: Timer?) {
         if engine.isRunning {
             if samples.count > 0 {
-                spectrumView.fft = fft(samples) //.map({ (sample) -> Float in
-//                    20*log10(sample)
-//                })
+                spectrumView.fft = fft(samples)
             }
         }
     }
     
-    func setupAudioEngine() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
-            
-            let ioBufferDuration = 64.0 / sampleRate
-            
-            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(ioBufferDuration)
-        } catch {
-            print("AVAudioSession setup error: \(error)")
-        }
-        
-        let mixer = engine.mainMixerNode
-        let input = engine.inputNode!
-        
-        sampleRate = input.inputFormat(forBus: 0).sampleRate
-        
-        engine.connect(input, to: mixer, format: input.inputFormat(forBus: 0))
-        
-        input.installTap(onBus: 0, bufferSize: bufferSize, format: input.inputFormat(forBus: 0)) { (buffer, time) in
-            buffer.frameLength = self.bufferSize
-            let channels = UnsafeBufferPointer(start: buffer.floatChannelData, count: Int(buffer.format.channelCount))
-            let samples = UnsafeBufferPointer(start: channels[0], count: Int(buffer.frameLength))
-            
-            self.samples = Array<Float>(samples)
-        }
-    }
-		
-	func startEngine() {
-        if !engine.isRunning {
-            do {
-                try engine.start()
-                //print("AVAudioEngine started!")
-                
-                RunLoop.current.add(timer, forMode: RunLoopMode.commonModes)
-                
-            } catch {
-                print("AVAudioEngine start error: \(error)")
-            }
-        }
+    func dBscaling(_ dB: CGFloat,_ height: CGFloat) -> CGFloat {
+        let max: CGFloat = log2(128.0)
+        let scaleFactor: CGFloat = height/max
+        return log2(dB)*scaleFactor
     }
     
-    func stopEngine() {
-        if engine.isRunning {
-            engine.stop()
-            //print("AVAudioEngine stopped!")
-            
-            RunLoop.current.cancelPerform(#selector(self.timerTick), target: self, argument: nil)
-        }
+    func freqScaling(_ width: CGFloat,_ frequency: Double) -> CGFloat {
+        let max = log10(((bufferSize/2)-1)*sampleRate/bufferSize) - 1
+        let scaleFactor = Double(width)/max
+        return CGFloat(log10(frequency/10)*scaleFactor)
     }
+    
 }
 

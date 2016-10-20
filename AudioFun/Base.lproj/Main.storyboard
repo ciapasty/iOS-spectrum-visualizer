@@ -18,7 +18,7 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="cbG-ym-pmC" customClass="SpectrumView" customModule="AudioFun" customModuleProvider="target">
@@ -128,6 +128,7 @@
                     <connections>
                         <outlet property="bufferLabel" destination="i3l-WM-TQs" id="I4A-O1-LE3"/>
                         <outlet property="bufferStepper" destination="xHj-Jr-2gs" id="PKm-b0-My3"/>
+                        <outlet property="decibelAxisView" destination="iP5-Zn-Jrh" id="6MM-vB-QjQ"/>
                         <outlet property="freqAxisView" destination="gdy-V4-Eml" id="hPR-AL-ygC"/>
                         <outlet property="powerSwitch" destination="U95-6p-SjF" id="QJ2-zd-7at"/>
                         <outlet property="spectrumView" destination="cbG-ym-pmC" id="lmp-iQ-mtB"/>

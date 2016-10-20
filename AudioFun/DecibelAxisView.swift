@@ -8,8 +8,10 @@
 
 import UIKit
 
-@IBDesignable
+//@IBDesignable
 class DecibelAxisView: UIView {
+    
+    var delegate: dBFreqAxesScalingDelegate?
     
     private let textRightMargin: CGFloat = 10
     private let textBottomMargin: CGFloat = 7.5
@@ -22,7 +24,6 @@ class DecibelAxisView: UIView {
         backgroundColor?.set()
         UIBezierPath(rect: rect).fill()
         
-        let scaleFactor = rect.height/log2(128.0)
         let scaleLine = UIBezierPath()
         
         tintColor.withAlphaComponent(0.5).set()
@@ -31,7 +32,7 @@ class DecibelAxisView: UIView {
         scaleLine.addLine(to: CGPoint(x: rect.width-5, y: 0))
         
         for dB in decibelLabels {
-            let height = CGFloat(log2(dB)*scaleFactor)
+            let height = delegate!.dBscaling(dB, rect.height)
             scaleLine.move(to: CGPoint(x: rect.width, y: height))
             scaleLine.addLine(to: CGPoint(x: rect.width-5, y: height))
         }
@@ -46,11 +47,11 @@ class DecibelAxisView: UIView {
         layer.addSublayer(getLabelLayer(withText: "0", inRect: label0rect, colored: tintColor))
         
         for dB in decibelLabels {
-            let labelRect = CGRect(origin: CGPoint(x: -textRightMargin, y: CGFloat(log2(dB)*scaleFactor) - textBottomMargin), size: rect.size)
+            let labelRect = CGRect(origin: CGPoint(x: -textRightMargin, y: delegate!.dBscaling(dB, rect.height) - textBottomMargin), size: rect.size)
             layer.addSublayer(getLabelLayer(withText: "-\(Int(dB))", inRect: labelRect, colored: tintColor))
         }
         
-        let label70rect = CGRect(origin: CGPoint(x: -textRightMargin, y: CGFloat(log2(128)*scaleFactor) - textBottomMargin), size: rect.size)
+        let label70rect = CGRect(origin: CGPoint(x: -textRightMargin, y: delegate!.dBscaling(128, rect.height) - textBottomMargin), size: rect.size)
         layer.addSublayer(getLabelLayer(withText: "-inf", inRect: label70rect, colored: tintColor))
     }
     

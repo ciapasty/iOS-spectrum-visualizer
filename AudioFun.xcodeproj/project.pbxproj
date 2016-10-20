@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		636C16B21DB9162B001A6944 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C16B11DB9162B001A6944 /* AudioEngine.swift */; };
 		63B610B21DB0DC2900715C1E /* SpectrumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B610B11DB0DC2900715C1E /* SpectrumView.swift */; };
 		63B610B41DB0EDB000715C1E /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B610B31DB0EDB000715C1E /* FFT.swift */; };
 		63B610B61DB2525E00715C1E /* FrequencyAxisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B610B51DB2525E00715C1E /* FrequencyAxisView.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		636C16B11DB9162B001A6944 /* AudioEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
 		63B610B11DB0DC2900715C1E /* SpectrumView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrumView.swift; sourceTree = "<group>"; };
 		63B610B31DB0EDB000715C1E /* FFT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFT.swift; sourceTree = "<group>"; };
 		63B610B51DB2525E00715C1E /* FrequencyAxisView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyAxisView.swift; sourceTree = "<group>"; };
@@ -46,12 +48,20 @@
 		632D49291DB3700800275EB7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				63B610B31DB0EDB000715C1E /* FFT.swift */,
+				636C16B11DB9162B001A6944 /* AudioEngine.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		636C16B01DB91606001A6944 /* Views */ = {
+			isa = PBXGroup;
+			children = (
 				63B610B11DB0DC2900715C1E /* SpectrumView.swift */,
 				63B610B51DB2525E00715C1E /* FrequencyAxisView.swift */,
 				63B610B71DB2527000715C1E /* DecibelAxisView.swift */,
-				63B610B31DB0EDB000715C1E /* FFT.swift */,
 			);
-			name = Classes;
+			name = Views;
 			sourceTree = "<group>";
 		};
 		CE250A851DA17ED2003EFC52 = {
@@ -75,6 +85,7 @@
 			children = (
 				CE250A911DA17ED2003EFC52 /* AppDelegate.swift */,
 				CE250A931DA17ED2003EFC52 /* SpectrumViewController.swift */,
+				636C16B01DB91606001A6944 /* Views */,
 				632D49291DB3700800275EB7 /* Classes */,
 				CE250A951DA17ED2003EFC52 /* Main.storyboard */,
 				CE250A981DA17ED2003EFC52 /* Assets.xcassets */,
@@ -164,6 +175,7 @@
 				63B610B41DB0EDB000715C1E /* FFT.swift in Sources */,
 				63B610B81DB2527000715C1E /* DecibelAxisView.swift in Sources */,
 				63B610B21DB0DC2900715C1E /* SpectrumView.swift in Sources */,
+				636C16B21DB9162B001A6944 /* AudioEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

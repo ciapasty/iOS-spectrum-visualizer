@@ -8,8 +8,17 @@
 
 import UIKit
 
-@IBDesignable
+protocol dBFreqAxesScalingDelegate {
+    var sampleRate: Double { get }
+    var bufferSize: Double { get }
+    func dBscaling(_ dB: CGFloat,_ height: CGFloat) -> CGFloat
+    func freqScaling(_ width: CGFloat,_ frequency: Double) -> CGFloat
+}
+
+//@IBDesignable
 class SpectrumView: UIView {
+    
+    var delegate: dBFreqAxesScalingDelegate?
     
     var fft:[Float]? {
         didSet {
@@ -18,17 +27,6 @@ class SpectrumView: UIView {
                 //print("min:", fft!.min()!, "max:",fft!.max()!)
                 //print(fft!)
             }
-            setNeedsDisplay()
-        }
-    }
-    
-    var samplingRate: Double = 44100.0 {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    var bufferSize: Double = 512.0 {
-        didSet {
             setNeedsDisplay()
         }
     }
@@ -51,9 +49,6 @@ class SpectrumView: UIView {
     }
 
     private func drawSpectrum(inRect rect: CGRect) {
-        let max = log10(((bufferSize/2)-1)*samplingRate/bufferSize) - 1
-        let scaleFactor = Double(rect.width)/max
-        let heightScaling = rect.height/(log2(128.0))
         let wave = UIBezierPath()
         //let divisor = CGFloat(fft!.count)/rect.width
         
@@ -64,52 +59,48 @@ class SpectrumView: UIView {
             if index == 0 {
                 continue
             }
-            let freq = Double(index)*samplingRate/bufferSize
+            let freq = Double(index)*delegate!.sampleRate/delegate!.bufferSize
             if freq > 20000 {
                 break
             } else {
-                let freqLog = log10(freq/10)
-                wave.addLine(to: CGPoint(x: CGFloat(freqLog*scaleFactor), y: CGFloat(log2(abs(magn)))*heightScaling))
+                wave.addLine(to: CGPoint(x: delegate!.freqScaling(rect.width, freq),
+                                         y: delegate!.dBscaling(CGFloat(abs(magn)), rect.height)))
             }
         }
         wave.stroke()
     }
     
     private func drawFreqScaleLines(inRect rect: CGRect) {
-        let max = log10(((bufferSize/2)-1)*samplingRate/bufferSize) - 1
-        let scaleFactor = Double(rect.width)/max
         let scaleLine = UIBezierPath()
         
         tintColor.withAlphaComponent(0.5).set()
         
         for freq in scaleFrequencies {
-            scaleLine.move(to: CGPoint(x: CGFloat(log10(freq/10)*scaleFactor), y: 0))
-            scaleLine.addLine(to: CGPoint(x: CGFloat(log10(freq/10)*scaleFactor), y: rect.height))
+            let width = delegate!.freqScaling(rect.width, freq)
+            scaleLine.move(to: CGPoint(x: width, y: 0))
+            scaleLine.addLine(to: CGPoint(x: width, y: rect.height))
         }
         
         scaleLine.stroke()
     }
     
     private func drawDecibelScaleLines(inRect rect: CGRect) {
-        let max = log10(((bufferSize/2)-1)*samplingRate/bufferSize) - 1
-        let scaleFactor = Double(rect.width)/max
-        let heightScaling = rect.height/(log2(128.0))
-        
+        let width = delegate!.freqScaling(rect.width, 20000)
         let scaleLine = UIBezierPath()
         
         tintColor.withAlphaComponent(0.5).set()
         
         scaleLine.move(to: CGPoint(x: 0, y: 0))
-        scaleLine.addLine(to: CGPoint(x: CGFloat(log10(2000)*scaleFactor), y: 0))
+        scaleLine.addLine(to: CGPoint(x: width, y: 0))
         
         for dB in decibelLabels {
-            let height = CGFloat(log2(dB)*heightScaling)
+            let height = delegate!.dBscaling(dB, rect.height) //CGFloat(log2(dB)*heightScaling)
             scaleLine.move(to: CGPoint(x: 0, y: height))
-            scaleLine.addLine(to: CGPoint(x: CGFloat(log10(2000)*scaleFactor), y: height))
+            scaleLine.addLine(to: CGPoint(x: width, y: height))
         }
         
         scaleLine.move(to: CGPoint(x: 0, y: rect.height))
-        scaleLine.addLine(to: CGPoint(x: CGFloat(log10(2000)*scaleFactor), y: rect.height))
+        scaleLine.addLine(to: CGPoint(x: width, y: rect.height))
         
         scaleLine.stroke()
     }
